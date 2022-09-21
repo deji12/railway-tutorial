@@ -14,9 +14,11 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 @login_required()
+@csrf_exempt
 def HomePage(request):
     if request.method == 'POST':
         incoming_task = request.POST['add_task']
@@ -46,6 +48,7 @@ def HomePage(request):
     return render(request, 'td/index.html', context)
 
 @login_required()
+@csrf_exempt
 def UpdateTask(request, id):
     if request.method == 'POST':
         new_task_name = request.POST['update_task']
@@ -83,6 +86,7 @@ def UpdateTask(request, id):
     return render(request, 'td/update.html', context)
 
 @login_required()
+@csrf_exempt
 def DeleteTask(request, id):
     del_task = Task.objects.get(id=id)
     if request.method == 'POST':
@@ -91,7 +95,7 @@ def DeleteTask(request, id):
 
     return render(request, 'td/delete.html', {})
     
-
+@csrf_exempt
 def Login(request):
     if request.method == 'POST':
         username = request.POST['uname']
@@ -111,6 +115,7 @@ def Logout(request):
     logout(request)
     return redirect('login')
 
+@csrf_exempt
 def Register(request):
     if request.method =='POST':
         fname = request.POST['fname']
@@ -160,6 +165,7 @@ def Register(request):
     return render(request, 'td/reg.html', {})
 
 @login_required
+@csrf_exempt
 def UpdateProfile(request, id):
     my_user = User.objects.get(id=id)
     if request.method == 'POST':
@@ -209,6 +215,7 @@ def UpdateProfile(request, id):
     return render(request, 'td/update_profile.html', {})
 
 @login_required()
+@csrf_exempt
 def DashBoard(request):
     if request.method == 'POST':
         data = request.POST['search']
@@ -350,7 +357,7 @@ def DeleteUser(request):
 
     return render(request, 'td/delete_user.html', context)
 
-
+@csrf_exempt
 def Notify(request):
     if request.method == 'POST':
 
@@ -391,7 +398,7 @@ def Notify(request):
 
     return render(request, 'td/send_email.html', {})
 
-
+@csrf_exempt
 def password_reset_request(request):
     if request.method == 'POST':
         pass_reset_form = PasswordResetForm(request.POST)
